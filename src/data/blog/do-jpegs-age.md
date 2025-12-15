@@ -21,7 +21,7 @@ Turns out that's not how it works.
 
 ## Short answer
 
-👉 JPEG files do **not** age, rot, or lose quality over time.  
+JPEG files do **not** age, rot, or lose quality over time.  
 A JPEG saved in 1998 and stored safely will be bit-for-bit identical today.
 
 If something changes, it's not time doing the damage.
@@ -86,7 +86,7 @@ Each upload → download → re-upload cycle introduces **new compression artifa
 
 Again, it's workflow — not age.
 
-## The important distinction 🧠
+## The important distinction
 
 | Concept | Real? | Time-based? |
 |------|------|-----------|
