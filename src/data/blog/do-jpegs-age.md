@@ -1,6 +1,6 @@
 ---
 title: "Do JPEGs age?"
-description: "JPEG files don't slowly degrade over time. What actually causes quality loss is recompression and workflow, not age."
+description: "JPEG files do not slowly degrade over time. What actually causes quality loss is recompression and workflow, not age."
 pubDatetime: 2025-12-15T09:00:00Z
 modDatetime: 2025-12-15T09:00:00Z
 tags:
@@ -13,122 +13,139 @@ draft: false
 featured: true
 ---
 
-I've carried this idea around for years: that JPEG images slowly degrade just by existing.
+I have carried this idea around for years.
 
-That if you save a photo, leave it untouched long enough, and come back years later, it will somehow be worse.
+That JPEG images slowly degrade just by existing.
 
-Turns out that's not how it works.
+That if you save a photo, leave it untouched long enough and come back years later, it will somehow be worse.
+
+Turns out that is not how it works.
 
 ## Short answer
 
-JPEG files do **not** age, rot, or lose quality over time.  
-A JPEG saved in 1998 and stored safely will be bit-for-bit identical today.
+JPEG files do not age, rot or lose quality over time.
 
-If something changes, it's not time doing the damage.
+A JPEG saved in 1998 and stored safely will be bit for bit identical today.
 
-## What JPEGs do *not* do ❌
+If something changes, it is not time doing the damage.
 
-- ❌ They do not slowly deteriorate
-- ❌ They do not lose quality just by sitting on disk
-- ❌ They do not "fade" like VHS tapes or printed photos
-- ❌ They do not change if left completely untouched
+## What JPEGs do not do
 
-Digital files are static.  
-Either the bits are intact — or they're corrupted.
+They do not slowly deteriorate.  
+They do not lose quality just by sitting on disk.  
+They do not fade like VHS tapes or printed photos.  
+They do not change if left completely untouched.
 
-There's no in-between.
+Digital files are static.
 
-## Where the confusion comes from ✅
+Either the bits are intact.  
+Or they are corrupted.
 
-### 1. Repeated re-saving (generation loss)
+There is no in between.
+
+## Where the confusion comes from
+
+### Repeated re saving
 
 This is the real culprit.
 
-JPEG is a **lossy** compression format.  
-Every time you:
+JPEG is a lossy compression format.
 
-- open a JPEG
-- edit it
-- save it again as JPEG
+Every time you open a JPEG, edit it and save it again as JPEG, compression is applied again.
 
-👉 compression is applied again, and more information is discarded.
+More information is discarded.
 
-Do this enough times, and the degradation becomes visible.
+Do this enough times and the degradation becomes visible.
 
-This is often remembered as *"JPEGs aging"*, but it's really **human workflows causing loss**, not time.
+This is often remembered as JPEGs aging.
 
-### 2. Storage corruption (rare, format-agnostic)
+What is actually happening is human workflows causing loss.
 
-All digital files — JPEG, PNG, PDF, ZIP — can suffer from:
+Not time.
 
-- failing hard drives
-- bad SSD cells
-- faulty controllers
-- cosmic ray bit flips (yes, really)
+### Storage corruption
 
-But when this happens:
+All digital files can suffer from hardware failure.
 
-- it's not gradual
-- it's not aesthetic
-- the file usually becomes partially unreadable or broken
+JPEG, PNG, PDF and ZIP are not special here.
 
-And it's not JPEG-specific.
+Drives fail.  
+Memory degrades.  
+Controllers misbehave.  
+Bits flip.
 
-### 3. Platform re-exports
+When this happens, it is not gradual.
 
-Social media platforms, messengers, and CMSs often:
+It is not aesthetic.
 
-- recompress images
-- downscale resolution
-- strip metadata
+The file usually becomes partially unreadable or broken.
 
-Each upload → download → re-upload cycle introduces **new compression artifacts**, reinforcing the idea that the image is "getting worse over time".
+And it is not JPEG specific.
 
-Again, it's workflow — not age.
+### Platform re exports
+
+Social media platforms, messengers and CMSs often recompress images.
+
+They downscale resolution.  
+They strip metadata.
+
+Each upload, download and re upload cycle introduces new compression artifacts.
+
+This reinforces the idea that the image is getting worse over time.
+
+Again, it is workflow.
+
+Not age.
 
 ## The important distinction
 
-| Concept | Real? | Time-based? |
+| Concept | Real | Time based |
 |------|------|-----------|
-| JPEG aging | ❌ Myth | ❌ No |
-| Repeated recompression | ✅ Yes | ❌ No |
-| Storage corruption | ✅ Yes | ⚠️ Rare |
-| Physical photo decay | ✅ Yes | ✅ Yes |
+| JPEG aging | No | No |
+| Repeated recompression | Yes | No |
+| Storage corruption | Yes | Rare |
+| Physical photo decay | Yes | Yes |
 
-## Best practices (especially for archiving)
+## Best practices
 
-If you want zero degradation:
+If you want zero degradation, keep an original master.
 
-- keep an original master (RAW, TIFF, PNG)
-- never overwrite it
-- export JPEGs only as derivatives
+RAW, TIFF or PNG.
 
-If you must edit JPEGs:
+Never overwrite it.
 
-- edit → save once
-- avoid multiple save cycles
-- use the highest quality setting
+Export JPEGs only as derivatives.
 
-For long-term archives:
+If you must edit JPEGs, edit and save once.
 
-- use redundant backups (3-2-1 rule)
-- verify checksums periodically (for serious collections)
+Avoid multiple save cycles.
+
+Use the highest quality setting.
+
+For long term archives, redundancy matters.
+
+Backups help.  
+Checksums help.  
+Time alone does not hurt files.
 
 ## Why this myth stuck around
 
-In the late 90s and early 2000s:
+In the late nineties and early two thousands, JPEGs were edited repeatedly.
 
-- JPEGs were edited repeatedly
-- storage was unreliable
-- originals were often lost
+Storage was unreliable.
 
-People compared *old* JPEGs to a memory of what they once were — and blamed time.
+Originals were often lost.
+
+People compared old JPEGs to a memory of what they once were.
+
+And blamed time.
 
 ## Bottom line
 
-JPEGs don't age.
+JPEGs do not age.
 
-People re-saving them do.
+People re saving them do.
 
 So then I just remembered it wrong.
 
+<p class="signature">[ N ]</p>
