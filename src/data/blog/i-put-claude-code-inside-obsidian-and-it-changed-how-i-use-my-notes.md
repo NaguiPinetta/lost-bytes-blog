@@ -1,8 +1,8 @@
 ---
 title: "I Put Claude Code Inside Obsidian — and It Changed How I Use My Notes"
 description: "Embedding Claude Code inside my Obsidian vault gave the AI real filesystem access. No more copy-paste — an agent that lives inside my notes."
-pubDatetime: 2025-02-11T09:00:00Z
-modDatetime: 2025-02-11T09:00:00Z
+pubDatetime: 2025-02-10T09:00:00Z
+modDatetime: 2025-02-10T09:00:00Z
 tags:
   - notes
   - obsidian
