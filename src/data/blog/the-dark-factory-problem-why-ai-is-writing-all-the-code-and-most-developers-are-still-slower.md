@@ -1,6 +1,6 @@
 ---
-title: "Inside the Dark Factory: Where AI Ships Software and Humans Fall Behind"
-description: "Most developers are slower with AI. The gap between vibe coding and real Dark Factories is the most important organizational gap in software."
+title: "The Dark Factory Problem: Why AI Is Writing All the Code and Most Developers Are Still Slower"
+description: "Why most developers are slower with AI, and why the future belongs to Dark Factories, not copilots."
 pubDatetime: 2026-02-23T09:00:00Z
 modDatetime: 2026-02-23T09:00:00Z
 tags:
