@@ -7,6 +7,7 @@ export const SITE = {
   ogImage: "astropaper-og.jpg",
   lightAndDarkMode: true,
   postPerIndex: 4,
+  latestNotesCount: 1,
   postPerPage: 4,
   scheduledPostMargin: 0, // Disabled - no scheduled post filtering
   showArchives: false, // Disabled
