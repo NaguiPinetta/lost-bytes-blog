@@ -238,6 +238,26 @@ const heroUrl = heroPost ? getPath(heroPost.id, heroPost.filePath) : "/posts";
           </div>
         )
       }
+
+      <div
+        class="my-16 flex flex-wrap items-center justify-between gap-7 rounded-[var(--radius)] border-2 border-border bg-[image:var(--gradient)] px-10 py-11 text-[#1a1a1a] shadow-[var(--shadow-hard)]"
+      >
+        <div>
+          <h2 class="max-w-[22ch] font-serif text-3xl leading-tight font-bold">
+            Fragments worth keeping, delivered occasionally.
+          </h2>
+          <p class="mt-1.5 max-w-[48ch] font-sans text-[15px] font-semibold">
+            No schedule, no spam — just the notes and experiments that survived
+            the notebook.
+          </p>
+        </div>
+        <a
+          href="/rss.xml"
+          class="press-btn inline-block rounded-[var(--radius)] border-2 border-[#1a1a1a] bg-[#111] px-6 py-3 font-sans font-black text-[#eae6e1]"
+        >
+          Subscribe via RSS ✱
+        </a>
+      </div>
     </div>
   </main>
   <Footer />
