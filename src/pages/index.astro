@@ -2,17 +2,24 @@
 import { getCollection } from "astro:content";
 import Layout from "@/layouts/Layout.astro";
 import Header from "@/components/Header.astro";
+import Ticker from "@/components/Ticker.astro";
 import Footer from "@/components/Footer.astro";
-import LinkButton from "@/components/LinkButton.astro";
+import PixelBottle from "@/components/PixelBottle.astro";
 import Card from "@/components/Card.astro";
-import Hr from "@/components/Hr.astro";
+import Tag from "@/components/Tag.astro";
+import SectionHead from "@/components/SectionHead.astro";
 import getSortedPosts from "@/utils/getSortedPosts";
-import IconRss from "@/assets/icons/IconRss.svg";
-import IconArrowRight from "@/assets/icons/IconArrowRight.svg";
+import { getPath } from "@/utils/getPath";
+import { slugifyStr } from "@/utils/slugify";
+import dayjs from "dayjs";
+import utc from "dayjs/plugin/utc";
+import timezone from "dayjs/plugin/timezone";
 import { SITE } from "@/config";
 
-const posts = await getCollection("blog");
+dayjs.extend(utc);
+dayjs.extend(timezone);
 
+const posts = await getCollection("blog");
 const sortedPosts = getSortedPosts(posts);
 const featuredPosts = sortedPosts
   .filter(({ data }) => data.featured)
@@ -21,116 +28,251 @@ const featuredPosts = sortedPosts
       new Date(b.data.pubDatetime).getTime() -
       new Date(a.data.pubDatetime).getTime()
   );
-const latestPosts = sortedPosts.slice(0, SITE.latestNotesCount);
+
+const heroPost = featuredPosts[0] ?? sortedPosts[0];
+const gridPosts = sortedPosts.slice(0, 8);
+const mostReadPosts = [...featuredPosts]
+  .sort(
+    (a, b) =>
+      new Date(a.data.pubDatetime).getTime() -
+      new Date(b.data.pubDatetime).getTime()
+  )
+  .slice(0, 4);
+
+const readingRoutes = [
+  {
+    id: "r1",
+    title: "Agents at work",
+    num: "①",
+    bandClass: "bg-green text-[#f4f1ea]",
+    footer: "4 notes · ~30 min",
+    notes: [
+      {
+        title: "Plan–Code–Execute: agents that create their own tools",
+        slug: "plan-code-execute-building-agents-that-create-their-own-tools",
+      },
+      {
+        title: "Vercel's Agent Skills: the missing middle layer",
+        slug: "vercel-agent-skills-the-missing-middle-layer-in-agent-architectures",
+      },
+      {
+        title: "The next bottleneck isn't model intelligence",
+        slug: "the-next-bottleneck-isnt-model-intelligence",
+      },
+      {
+        title: "Give Claude Code a map (Graphify)",
+        slug: "give-claude-code-a-map-graphify-knowledge-graph-tutorial",
+      },
+    ],
+  },
+  {
+    id: "r2",
+    title: "The Dark Factory files",
+    num: "②",
+    bandClass: "bg-yellow text-[#1a1a1a]",
+    footer: "3 notes · ~22 min",
+    notes: [
+      {
+        title: "Why AI writes the code and devs are still slower",
+        slug: "the-dark-factory-problem-why-ai-is-writing-all-the-code-and-most-developers-are-still-slower",
+      },
+      {
+        title: "Inside the Dark Factory",
+        slug: "inside-the-dark-factory-where-ai-ships-software-and-humans-fall-behind",
+      },
+      {
+        title: "The web is forking in the age of agents",
+        slug: "the-web-is-forking-in-the-age-of-agents",
+      },
+    ],
+  },
+  {
+    id: "r3",
+    title: "Curiosity cabinet",
+    num: "③",
+    bandClass: "bg-[#111] text-[#eae6e1]",
+    footer: "3 notes · ~18 min",
+    notes: [
+      { title: "Do JPEGs age?", slug: "do-jpegs-age" },
+      {
+        title: "Why Latin isn't called Roman",
+        slug: "why-latin-isnt-called-roman",
+      },
+      {
+        title: "Only ⅓ of Universal Grammar rules survived testing",
+        slug: "only-one-third-of-universal-grammar-rules-survived-testing",
+      },
+    ],
+  },
+] as const;
+
+const tagVariants = ["default", "yellow", "green"] as const;
+
+function formatHeroMeta(post: (typeof sortedPosts)[0]) {
+  const datetime = dayjs(post.data.pubDatetime).tz(
+    post.data.timezone || SITE.timezone
+  );
+  const words = (post.body ?? "").trim().split(/\s+/).filter(Boolean).length;
+  const mins = Math.max(1, Math.round(words / 200));
+  return `${datetime.format("MMMM D, YYYY")} · ${mins} min`;
+}
+
+const heroUrl = heroPost ? getPath(heroPost.id, heroPost.filePath) : "/posts";
 ---
 
 <Layout>
   <Header />
+  <Ticker />
   <main id="main-content" data-layout="index">
-    <section id="hero" class="pt-8 pb-6">
-      <h1 class="my-4 inline-flex items-center text-4xl font-bold sm:my-8 sm:text-5xl">
-        <img
-          src="/brand/bottle.png"
-          alt=""
-          width="44"
-          height="44"
-          class="w-10 h-10 sm:w-12 sm:h-12 mr-3 sm:mr-4 shrink-0 opacity-90 dark:hidden"
-        />
-        <img
-          src="/brand/bottle-white.png"
-          alt=""
-          width="44"
-          height="44"
-          class="w-10 h-10 sm:w-12 sm:h-12 mr-3 sm:mr-4 shrink-0 opacity-90 hidden dark:block"
-        />
-        Lost Bytes
-      </h1>
-
-      <p class="text-lg">
-        Notes, experiments, and fragments I didn't want to lose.
-      </p>
-      <p class="mt-2 text-sm opacity-75">
-        A public notebook — topics evolve over time.
-      </p>
-    </section>
-
-    <section id="start-here" class="pt-6 pb-6">
-      <h2 class="text-xl font-semibold tracking-wide mb-4">Start here</h2>
-      <div class="flex flex-wrap gap-4">
-        <LinkButton href="/about" class="underline decoration-dashed underline-offset-4 hover:text-accent">
-          About
-        </LinkButton>
-        <LinkButton href="/tags" class="underline decoration-dashed underline-offset-4 hover:text-accent">
-          Tags
-        </LinkButton>
-        <LinkButton href="/rss.xml" class="underline decoration-dashed underline-offset-4 hover:text-accent inline-flex items-center gap-1.5">
-          RSS
-          <IconRss
-            width={16}
-            height={16}
-            class="stroke-current rtl:-rotate-90"
+    {
+      heroPost && (
+        <section class="relative overflow-hidden border-b-2 border-border px-6 py-14 md:py-16">
+          <PixelBottle
+            class="pointer-events-none absolute top-7 -right-9 size-[330px] text-foreground opacity-[0.08]"
+            style="--byte: currentColor"
           />
-        </LinkButton>
-      </div>
-    </section>
-
-    <Hr />
-
-    <section id="entry-points" class="pt-6 pb-6">
-      <h2 class="text-xl font-semibold tracking-wide mb-4">Entry points</h2>
-      <div class="flex flex-wrap gap-4">
-        <LinkButton href="/tags/language" class="underline decoration-dashed underline-offset-4 hover:text-accent">
-          Language
-        </LinkButton>
-        <LinkButton href="/tags/writing" class="underline decoration-dashed underline-offset-4 hover:text-accent">
-          Writing
-        </LinkButton>
-        <LinkButton href="/tags/ai" class="underline decoration-dashed underline-offset-4 hover:text-accent">
-          AI
-        </LinkButton>
-      </div>
-    </section>
-
-    <Hr />
-
-    {
-      latestPosts.length > 0 && (
-        <>
-          <section id="recent-posts" class="pt-12 pb-6">
-            <h2 class="text-2xl font-semibold tracking-wide">Latest notes</h2>
-            <ul>
-              {latestPosts.map(data => (
-                <Card variant="h3" {...data} />
+          <div class="relative mx-auto max-w-app">
+            <span class="mb-5 inline-flex items-center gap-2 rounded-full border-2 border-border bg-muted px-3.5 py-1.5 font-sans text-xs font-extrabold tracking-[0.14em] uppercase before:size-2.25 before:rounded-full before:bg-green before:content-['']">
+              Fresh from the workbench
+            </span>
+            <h1 class="mb-5 max-w-[17ch] font-serif text-[clamp(34px,5.2vw,58px)] leading-[1.08] font-semibold tracking-tight">
+              <a href={heroUrl} class="text-foreground no-underline">
+                {heroPost.data.title}
+              </a>
+            </h1>
+            <p class="mb-6 max-w-[56ch] text-[19px] text-fg-muted italic">
+              {heroPost.data.description}
+            </p>
+            <div class="mb-7 flex flex-wrap items-center gap-2.5">
+              {heroPost.data.tags.slice(0, 4).map((tag, i) => (
+                <Tag
+                  tag={slugifyStr(tag)}
+                  tagName={tag}
+                  variant={tagVariants[i % 3]}
+                />
               ))}
-            </ul>
-          </section>
-          {featuredPosts.length > 0 && <Hr />}
-        </>
-      )
-    }
-
-    {
-      featuredPosts.length > 0 && (
-        <section id="featured" class="pt-12 pb-6">
-          <h2 class="text-2xl font-semibold tracking-wide">Featured</h2>
-          <ul>
-            {featuredPosts.map(data => (
-              <Card variant="h3" {...data} />
-            ))}
-          </ul>
+              <time class="ms-1.5 font-sans text-[13px] font-bold opacity-65">
+                {formatHeroMeta(heroPost)}
+              </time>
+            </div>
+            <a
+              href={heroUrl}
+              class="inline-block press-btn rounded-[var(--radius)] bg-yellow px-6 py-3.5 font-sans text-base font-black text-[#1a1a1a] no-underline"
+            >
+              Read the note →
+            </a>
+          </div>
         </section>
       )
     }
 
-    <div class="my-8 text-center">
-      <LinkButton href="/posts/">
-        All notes
-        <IconArrowRight class="inline-block rtl:-rotate-180" />
-      </LinkButton>
+    <div class="mx-auto max-w-app px-6" id="routes">
+      <SectionHead
+        title="Reading routes"
+        href="/posts"
+        linkLabel="All routes →"
+      />
+      <div class="grid gap-5 md:grid-cols-2 lg:grid-cols-3">
+        {
+          readingRoutes.map(route => (
+            <article class="flex lift-card flex-col overflow-hidden bg-muted">
+              <div
+                class:list={[
+                  "flex items-center justify-between border-b-2 border-border px-4 py-3.5 font-sans text-[13px] font-black tracking-[0.1em] uppercase",
+                  route.bandClass,
+                ]}
+              >
+                {route.title}
+                <span class="text-[22px]">{route.num}</span>
+              </div>
+              <ol class="flex-1 list-none p-0">
+                {route.notes.map((note, i) => (
+                  <li>
+                    <a
+                      href={`/posts/${note.slug}/`}
+                      class="flex items-baseline gap-3.5 border-b border-dashed border-[var(--line-soft)] px-4 py-3.5 text-[15.5px] leading-snug font-medium no-underline last:border-b-0 hover:bg-yellow/25"
+                    >
+                      <span class="shrink-0 font-sans text-xs font-black opacity-50">
+                        {String(i + 1).padStart(2, "0")}
+                      </span>
+                      {note.title}
+                    </a>
+                  </li>
+                ))}
+              </ol>
+              <div class="border-t-2 border-border px-4 py-3 font-sans text-xs font-bold opacity-70">
+                {route.footer}
+              </div>
+            </article>
+          ))
+        }
+      </div>
+    </div>
+
+    <div class="mx-auto max-w-app px-6" id="notes">
+      <SectionHead title="Latest notes" href="/posts" linkLabel="Archive →" />
+      <div class="grid gap-5 md:grid-cols-2 lg:grid-cols-3">
+        {
+          gridPosts.map((post, i) => (
+            <Card {...post} variant={i === 0 ? "big" : "default"} />
+          ))
+        }
+      </div>
+
+      {
+        mostReadPosts.length > 0 && (
+          <div class="mt-14 grid overflow-hidden rounded-[var(--radius)] border-2 border-border bg-muted md:grid-cols-2 lg:grid-cols-4">
+            {mostReadPosts.map((post, i) => (
+              <a
+                href={getPath(post.id, post.filePath)}
+                class="flex flex-col gap-2.5 border-b-2 border-border px-5 py-6 transition-colors last:border-b-0 hover:bg-yellow hover:text-[#1a1a1a] md:border-r-2 md:border-b-0 md:last:border-r-0 lg:border-b-0"
+              >
+                <span class="bignum font-sans text-[44px] leading-none font-black text-transparent [-webkit-text-stroke:2px_var(--foreground)]">
+                  {String(i + 1).padStart(2, "0")}
+                </span>
+                <h4 class="font-serif text-[16.5px] leading-snug font-semibold">
+                  {post.data.title}
+                </h4>
+              </a>
+            ))}
+          </div>
+        )
+      }
+
+      <div
+        class="my-16 flex flex-wrap items-center justify-between gap-7 rounded-[var(--radius)] border-2 border-border bg-[image:var(--gradient)] px-10 py-11 text-[#1a1a1a] shadow-[var(--shadow-hard)]"
+      >
+        <div>
+          <h2 class="max-w-[22ch] font-serif text-3xl leading-tight font-bold">
+            Fragments worth keeping, delivered occasionally.
+          </h2>
+          <p class="mt-1.5 max-w-[48ch] font-sans text-[15px] font-semibold">
+            No schedule, no spam — just the notes and experiments that survived
+            the notebook.
+          </p>
+        </div>
+        <a
+          href="/rss.xml"
+          class="press-btn inline-block rounded-[var(--radius)] border-2 border-[#1a1a1a] bg-[#111] px-6 py-3 font-sans font-black text-[#eae6e1]"
+        >
+          Subscribe via RSS ✱
+        </a>
+      </div>
     </div>
   </main>
   <Footer />
 </Layout>
+
+<style>
+  .bignum {
+    -webkit-text-fill-color: var(--background);
+  }
+
+  a:hover .bignum {
+    -webkit-text-stroke: 2px #1a1a1a;
+    -webkit-text-fill-color: var(--yellow);
+  }
+</style>
 
 <script>
   document.addEventListener("astro:page-load", () => {

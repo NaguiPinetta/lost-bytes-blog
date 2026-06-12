@@ -1,44 +1,32 @@
 ---
-import Breadcrumb from "@/components/Breadcrumb.astro";
+import SectionHead from "@/components/SectionHead.astro";
 import { SITE } from "@/config";
 
-interface StringTitleProp {
+export interface Props {
   pageTitle: string;
   pageDesc?: string;
+  linkHref?: string;
+  linkLabel?: string;
 }
 
-interface ArrayTitleProp {
-  pageTitle: [string, string];
-  titleTransition: string;
-  pageDesc?: string;
-}
-
-export type Props = StringTitleProp | ArrayTitleProp;
-
-const { props } = Astro;
+const { pageTitle, pageDesc, linkHref, linkLabel } = Astro.props;
 
 const backUrl = SITE.showBackButton ? Astro.url.pathname : "/";
 ---
 
-<Breadcrumb />
 <main
   data-backUrl={backUrl}
   id="main-content"
-  class="mx-auto w-full max-w-app px-4 pb-4"
+  class="mx-auto w-full max-w-app px-6 pt-8 pb-12"
 >
+  <SectionHead title={pageTitle} href={linkHref} linkLabel={linkLabel} />
   {
-    "titleTransition" in props ? (
-      <h1 class="text-2xl font-semibold sm:text-3xl">
-        {props.pageTitle[0]}
-        <span transition:name={props.titleTransition}>
-          {props.pageTitle[1]}
-        </span>
-      </h1>
-    ) : (
-      <h1 class="text-2xl font-semibold sm:text-3xl">{props.pageTitle}</h1>
-    )
+    pageDesc ? (
+      <p class="mb-8 max-w-2xl font-serif text-lg text-fg-muted italic">
+        {pageDesc}
+      </p>
+    ) : null
   }
-  <p class="mt-2 mb-6 italic">{props.pageDesc}</p>
   <slot />
 </main>
 

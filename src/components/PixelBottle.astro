@@ -1,0 +1,22 @@
+---
+interface Props {
+  class?: string;
+  style?: string;
+}
+
+const { class: className, style } = Astro.props;
+---
+
+<svg
+  viewBox="0 0 24 24"
+  class={className}
+  style={`shape-rendering: crispEdges;${style ? ` ${style}` : ""}`}
+  aria-hidden="true"
+>
+  <path
+    fill="currentColor"
+    d="M14 1h4v1H14zM14 2h1v1H14zM16 2h2v1H16zM14 3h1v1H14zM16 3h2v1H16zM13 4h5v1H13zM13 5h2v1H13zM16 5h2v1H16zM13 6h5v1H13zM13 7h1v1H13zM15 7h2v1H15zM12 8h2v1H12zM15 8h2v1H15zM12 9h1v1H12zM15 9h2v1H15zM12 10h1v1H12zM14 10h2v1H14zM9 11h7v1H9zM9 12h1v1H9zM14 12h3v1H14zM8 13h2v1H8zM15 13h2v1H15zM8 14h1v1H8zM10 14h1v1H10zM15 14h3v1H15zM8 15h1v1H8zM10 15h1v1H10zM15 15h3v1H15zM7 16h2v1H7zM10 16h1v1H10zM15 16h2v1H15zM7 17h1v1H7zM14 17h3v1H14zM7 18h1v1H7zM14 18h3v1H14zM7 19h1v1H7zM14 19h3v1H14zM6 20h2v1H6zM14 20h2v1H14zM6 21h2v1H6zM13 21h3v1H13zM0 22h22v1H0zM2 23h2v1H2zM5 23h2v1H5zM9 23h2v1H9zM13 23h2v1H13zM17 23h2v1H17zM20 23h2v1H20z"
+  ></path>
+  <rect x="23" y="22" width="1" height="1" fill="var(--byte, var(--yellow))"
+  ></rect>
+</svg>

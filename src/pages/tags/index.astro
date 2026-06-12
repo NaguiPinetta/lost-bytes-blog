@@ -10,15 +10,25 @@ import { SITE } from "@/config";
 
 const posts = await getCollection("blog");
 
-let tags = getUniqueTags(posts);
+const tags = getUniqueTags(posts);
+const tagVariants = ["default", "yellow", "green"] as const;
 ---
 
 <Layout title={`Tags | ${SITE.title}`}>
   <Header />
-  <Main pageTitle="Tags" pageDesc="All the tags used in notes.">
-    <ul>
-      {tags.map(({ tag, tagName }) => <Tag {tag} {tagName} size="lg" />)}
-    </ul>
+  <Main
+    pageTitle="Tags"
+    pageDesc="All the tags used in notes."
+    linkHref="/posts"
+    linkLabel="All notes →"
+  >
+    <div class="flex flex-wrap gap-2">
+      {
+        tags.map(({ tag, tagName }, i) => (
+          <Tag tag={tag} tagName={tagName} variant={tagVariants[i % 3]} />
+        ))
+      }
+    </div>
   </Main>
   <Footer />
 </Layout>

@@ -1,6 +1,6 @@
 export const SITE = {
   website: "https://lost-bytes-blog.vercel.app", // TODO: Update to your final Vercel domain
-  author: "Sat Naing",
+  author: "Nagui Pinetta",
   profile: "https://satnaing.dev/",
   desc: "Notes, experiments, and fragments I didn't want to lose.",
   title: "Lost Bytes",

@@ -1,0 +1,52 @@
+---
+import { getCollection } from "astro:content";
+import getUniqueTags from "@/utils/getUniqueTags";
+import { SITE } from "@/config";
+
+const posts = await getCollection("blog");
+const tags = getUniqueTags(posts).slice(0, 6);
+
+const items = ["A public notebook", SITE.desc, ...tags.map(t => t.tagName)];
+---
+
+<div
+  class="overflow-hidden border-b-2 border-border bg-green whitespace-nowrap text-[#f4f1ea]"
+>
+  <div
+    class="ticker-track inline-block py-2 font-sans text-[13px] font-extrabold tracking-widest uppercase"
+  >
+    {
+      [...items, ...items].map(text => (
+        <>
+          <span>{text}</span>
+          <span class="text-yellow">✱</span>
+        </>
+      ))
+    }
+  </div>
+</div>
+
+<style>
+  @keyframes scroll {
+    from {
+      transform: translateX(0);
+    }
+    to {
+      transform: translateX(-50%);
+    }
+  }
+
+  .ticker-track {
+    animation: scroll 32s linear infinite;
+  }
+
+  .ticker-track :global(span) {
+    margin: 0 22px;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .ticker-track {
+      animation: none;
+    }
+  }
+</style>

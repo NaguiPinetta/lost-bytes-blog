@@ -26,22 +26,20 @@ export async function getStaticPaths({ paginate }: GetStaticPathsOptions) {
   });
 }
 
-const params = Astro.params;
-const { tag } = params;
 const { page, tagName } = Astro.props;
 ---
 
 <Layout title={`Tag: ${tagName} | ${SITE.title}`}>
   <Header />
   <Main
-    pageTitle={[`Tag:`, `${tagName}`]}
-    titleTransition={tag}
+    pageTitle={`Tag: ${tagName}`}
     pageDesc={`All notes with the tag "${tagName}".`}
+    linkHref="/tags"
+    linkLabel="All tags →"
   >
-    <h1 slot="title" transition:name={tag}>{`Tag:${tag}`}</h1>
-    <ul>
+    <div class="grid gap-5 md:grid-cols-2 lg:grid-cols-3">
       {page.data.map(data => <Card {...data} />)}
-    </ul>
+    </div>
   </Main>
 
   <Pagination {page} />
