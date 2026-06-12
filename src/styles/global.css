@@ -5,19 +5,42 @@
 
 :root,
 html[data-theme="light"] {
-  --background: #fdfdfd;
-  --foreground: #282728;
-  --accent: #006cac;
-  --muted: #e6e6e6;
-  --border: #ece9e9;
+  --background: #eae6e1;
+  --foreground: #1a1a1a;
+  --accent: #17a583;
+  --muted: #f2efe9;
+  --border: #1a1a1a;
+  --yellow: #fcd221;
+  --green: #17a583;
+  --fg-muted: #4a463f;
+  --card-hover: #ffffff;
+  --line-soft: rgba(26, 26, 26, 0.3);
+  --shadow-color: #1a1a1a;
 }
 
 html[data-theme="dark"] {
-  --background: #212737;
-  --foreground: #eaedf3;
-  --accent: #ff6b01;
-  --muted: #343f60;
-  --border: #ab4b08;
+  --background: #1b1916;
+  --foreground: #ece7df;
+  --accent: #17a583;
+  --muted: #26221c;
+  --border: #ece7df;
+  --fg-muted: #b5ada1;
+  --card-hover: #2e2922;
+  --line-soft: rgba(236, 231, 223, 0.3);
+  --shadow-color: #0a0908;
+}
+
+:root {
+  --gradient: linear-gradient(135deg, var(--green), var(--yellow));
+  --radius: 10px;
+  --bw: 2px;
+  --shadow-hard: 5px 5px 0 var(--shadow-color);
+  --shadow-hard-sm: 3px 3px 0 var(--shadow-color);
+}
+
+@theme {
+  --font-serif: "Lora", Georgia, serif;
+  --font-sans: "Nunito Sans", ui-sans-serif, system-ui, sans-serif;
 }
 
 @theme inline {
@@ -26,6 +49,10 @@ html[data-theme="dark"] {
   --color-accent: var(--accent);
   --color-muted: var(--muted);
   --color-border: var(--border);
+  --color-yellow: var(--yellow);
+  --color-green: var(--green);
+  --color-fg-muted: var(--fg-muted);
+  --color-card-hover: var(--card-hover);
 }
 
 @layer base {
@@ -38,7 +65,7 @@ html[data-theme="dark"] {
     @apply overflow-y-scroll scroll-smooth;
   }
   body {
-    @apply flex min-h-svh flex-col bg-background font-mono text-foreground selection:bg-accent/75 selection:text-background;
+    @apply flex min-h-svh flex-col bg-background font-serif text-[17.5px] leading-[1.75] text-foreground antialiased selection:bg-yellow selection:text-[#1a1a1a];
   }
   a,
   button {
@@ -50,16 +77,40 @@ html[data-theme="dark"] {
   }
   section,
   footer {
-    @apply mx-auto max-w-app px-4;
+    @apply mx-auto max-w-app px-6;
   }
 }
 
 @utility max-w-app {
-  @apply max-w-3xl;
+  @apply max-w-6xl;
+}
+
+@utility press-btn {
+  border: var(--bw) solid var(--border);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow-hard);
+  transition: all 0.15s ease;
+
+  &:hover {
+    transform: translate(3px, 3px);
+    box-shadow: 1px 1px 0 var(--shadow-color);
+  }
+}
+
+@utility lift-card {
+  border: var(--bw) solid var(--border);
+  border-radius: var(--radius);
+  transition: all 0.15s ease;
+
+  &:hover {
+    transform: translate(-3px, -3px);
+    box-shadow: var(--shadow-hard);
+    background: var(--card-hover);
+  }
 }
 
 .active-nav {
-  @apply underline decoration-wavy decoration-2 underline-offset-4;
+  @apply border-2 border-border bg-muted;
 }
 
 /* Source: https://piccalil.li/blog/a-more-modern-css-reset/ */
