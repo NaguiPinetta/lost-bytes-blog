@@ -78,7 +78,7 @@
     }
 
     table {
-      @apply my-6 w-full overflow-hidden rounded-[var(--radius)] border-2 border-border border-collapse text-[15.5px];
+      @apply my-6 w-full border-collapse overflow-hidden rounded-[var(--radius)] border-2 border-border text-[15.5px];
 
       th {
         @apply border-b-2 border-border bg-muted px-4 py-3 text-left font-sans text-xs font-black tracking-widest uppercase;

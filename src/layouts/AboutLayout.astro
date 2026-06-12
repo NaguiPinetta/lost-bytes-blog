@@ -26,7 +26,10 @@ const { frontmatter } = Astro.props;
       )
     }
     <SectionHead title={frontmatter.title} />
-    <section id="about" class="app-prose mx-auto max-w-[760px] prose-img:border-0">
+    <section
+      id="about"
+      class="app-prose mx-auto max-w-[760px] prose-img:border-0"
+    >
       <slot />
     </section>
   </main>

@@ -32,7 +32,7 @@ const { noMarginTop = false } = Astro.props;
       </span>
       <span>
         lost<em
-          class="bg-[image:var(--gradient)] bg-clip-text font-black not-italic text-transparent"
+          class="bg-[image:var(--gradient)] bg-clip-text font-black text-transparent not-italic"
           >bytes</em
         >
       </span>
@@ -44,7 +44,8 @@ const { noMarginTop = false } = Astro.props;
       <a href="/rss.xml" class="hover:text-yellow">RSS</a>
     </nav>
     <p class="w-full font-sans text-xs opacity-55">
-      Copyright © {currentYear} {SITE.author}. All rights reserved.
+      Copyright © {currentYear}
+      {SITE.author}. All rights reserved.
     </p>
   </div>
 </footer>

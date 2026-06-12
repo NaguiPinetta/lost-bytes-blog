@@ -128,7 +128,7 @@ const heroUrl = heroPost ? getPath(heroPost.id, heroPost.filePath) : "/posts";
       heroPost && (
         <section class="relative overflow-hidden border-b-2 border-border px-6 py-14 md:py-16">
           <PixelBottle
-            class="pointer-events-none absolute -right-9 top-7 size-[330px] opacity-[0.08] text-foreground"
+            class="pointer-events-none absolute top-7 -right-9 size-[330px] text-foreground opacity-[0.08]"
             style="--byte: currentColor"
           />
           <div class="relative mx-auto max-w-app">
@@ -144,22 +144,20 @@ const heroUrl = heroPost ? getPath(heroPost.id, heroPost.filePath) : "/posts";
               {heroPost.data.description}
             </p>
             <div class="mb-7 flex flex-wrap items-center gap-2.5">
-              {
-                heroPost.data.tags.slice(0, 4).map((tag, i) => (
-                  <Tag
-                    tag={slugifyStr(tag)}
-                    tagName={tag}
-                    variant={tagVariants[i % 3]}
-                  />
-                ))
-              }
+              {heroPost.data.tags.slice(0, 4).map((tag, i) => (
+                <Tag
+                  tag={slugifyStr(tag)}
+                  tagName={tag}
+                  variant={tagVariants[i % 3]}
+                />
+              ))}
               <time class="ms-1.5 font-sans text-[13px] font-bold opacity-65">
                 {formatHeroMeta(heroPost)}
               </time>
             </div>
             <a
               href={heroUrl}
-              class="press-btn inline-block rounded-[var(--radius)] bg-yellow px-6 py-3.5 font-sans text-base font-black text-[#1a1a1a] no-underline"
+              class="inline-block press-btn rounded-[var(--radius)] bg-yellow px-6 py-3.5 font-sans text-base font-black text-[#1a1a1a] no-underline"
             >
               Read the note →
             </a>
@@ -169,11 +167,15 @@ const heroUrl = heroPost ? getPath(heroPost.id, heroPost.filePath) : "/posts";
     }
 
     <div class="mx-auto max-w-app px-6" id="routes">
-      <SectionHead title="Reading routes" href="/posts" linkLabel="All routes →" />
+      <SectionHead
+        title="Reading routes"
+        href="/posts"
+        linkLabel="All routes →"
+      />
       <div class="grid gap-5 md:grid-cols-2 lg:grid-cols-3">
         {
           readingRoutes.map(route => (
-            <article class="lift-card flex flex-col overflow-hidden bg-muted">
+            <article class="flex lift-card flex-col overflow-hidden bg-muted">
               <div
                 class:list={[
                   "flex items-center justify-between border-b-2 border-border px-4 py-3.5 font-sans text-[13px] font-black tracking-[0.1em] uppercase",
@@ -184,21 +186,19 @@ const heroUrl = heroPost ? getPath(heroPost.id, heroPost.filePath) : "/posts";
                 <span class="text-[22px]">{route.num}</span>
               </div>
               <ol class="flex-1 list-none p-0">
-                {
-                  route.notes.map((note, i) => (
-                    <li>
-                      <a
-                        href={`/posts/${note.slug}/`}
-                        class="flex items-baseline gap-3.5 border-b border-dashed border-[var(--line-soft)] px-4 py-3.5 text-[15.5px] leading-snug font-medium no-underline last:border-b-0 hover:bg-yellow/25"
-                      >
-                        <span class="shrink-0 font-sans text-xs font-black opacity-50">
-                          {String(i + 1).padStart(2, "0")}
-                        </span>
-                        {note.title}
-                      </a>
-                    </li>
-                  ))
-                }
+                {route.notes.map((note, i) => (
+                  <li>
+                    <a
+                      href={`/posts/${note.slug}/`}
+                      class="flex items-baseline gap-3.5 border-b border-dashed border-[var(--line-soft)] px-4 py-3.5 text-[15.5px] leading-snug font-medium no-underline last:border-b-0 hover:bg-yellow/25"
+                    >
+                      <span class="shrink-0 font-sans text-xs font-black opacity-50">
+                        {String(i + 1).padStart(2, "0")}
+                      </span>
+                      {note.title}
+                    </a>
+                  </li>
+                ))}
               </ol>
               <div class="border-t-2 border-border px-4 py-3 font-sans text-xs font-bold opacity-70">
                 {route.footer}
@@ -222,21 +222,19 @@ const heroUrl = heroPost ? getPath(heroPost.id, heroPost.filePath) : "/posts";
       {
         mostReadPosts.length > 0 && (
           <div class="mt-14 grid overflow-hidden rounded-[var(--radius)] border-2 border-border bg-muted md:grid-cols-2 lg:grid-cols-4">
-            {
-              mostReadPosts.map((post, i) => (
-                <a
-                  href={getPath(post.id, post.filePath)}
-                  class="flex flex-col gap-2.5 border-b-2 border-border px-5 py-6 transition-colors last:border-b-0 hover:bg-yellow hover:text-[#1a1a1a] md:border-r-2 md:border-b-0 md:last:border-r-0 lg:border-b-0"
-                >
-                  <span class="bignum font-sans text-[44px] leading-none font-black text-transparent [-webkit-text-stroke:2px_var(--foreground)]">
-                    {String(i + 1).padStart(2, "0")}
-                  </span>
-                  <h4 class="font-serif text-[16.5px] leading-snug font-semibold">
-                    {post.data.title}
-                  </h4>
-                </a>
-              ))
-            }
+            {mostReadPosts.map((post, i) => (
+              <a
+                href={getPath(post.id, post.filePath)}
+                class="flex flex-col gap-2.5 border-b-2 border-border px-5 py-6 transition-colors last:border-b-0 hover:bg-yellow hover:text-[#1a1a1a] md:border-r-2 md:border-b-0 md:last:border-r-0 lg:border-b-0"
+              >
+                <span class="bignum font-sans text-[44px] leading-none font-black text-transparent [-webkit-text-stroke:2px_var(--foreground)]">
+                  {String(i + 1).padStart(2, "0")}
+                </span>
+                <h4 class="font-serif text-[16.5px] leading-snug font-semibold">
+                  {post.data.title}
+                </h4>
+              </a>
+            ))}
           </div>
         )
       }
