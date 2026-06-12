@@ -1,15 +1,16 @@
 ---
 interface Props {
   class?: string;
+  style?: string;
 }
 
-const { class: className } = Astro.props;
+const { class: className, style } = Astro.props;
 ---
 
 <svg
   viewBox="0 0 24 24"
   class={className}
-  style="shape-rendering: crispEdges"
+  style={`shape-rendering: crispEdges;${style ? ` ${style}` : ""}`}
   aria-hidden="true"
 >
   <path

@@ -4,16 +4,19 @@ import Layout from "@/layouts/Layout.astro";
 import Header from "@/components/Header.astro";
 import Footer from "@/components/Footer.astro";
 import Tag from "@/components/Tag.astro";
-import Datetime from "@/components/Datetime.astro";
+import PixelBottle from "@/components/PixelBottle.astro";
 import EditPost from "@/components/EditPost.astro";
 import ShareLinks from "@/components/ShareLinks.astro";
-import BackButton from "@/components/BackButton.astro";
 import BackToTopButton from "@/components/BackToTopButton.astro";
 import { getPath } from "@/utils/getPath";
 import { slugifyStr } from "@/utils/slugify";
-import IconChevronLeft from "@/assets/icons/IconChevronLeft.svg";
-import IconChevronRight from "@/assets/icons/IconChevronRight.svg";
+import dayjs from "dayjs";
+import utc from "dayjs/plugin/utc";
+import timezone from "dayjs/plugin/timezone";
 import { SITE } from "@/config";
+
+dayjs.extend(utc);
+dayjs.extend(timezone);
 
 export interface Props {
   post: CollectionEntry<"blog">;
@@ -30,7 +33,7 @@ const {
   canonicalURL,
   pubDatetime,
   modDatetime,
-  timezone,
+  timezone: postTimezone,
   tags,
   hideEditPost,
 } = post.data;
@@ -39,16 +42,12 @@ const { Content } = await render(post);
 
 let ogImageUrl: string | undefined;
 
-// Determine OG image source
 if (typeof initOgImage === "string") {
-  ogImageUrl = initOgImage; // Remote OG image (absolute URL)
+  ogImageUrl = initOgImage;
 } else if (initOgImage?.src) {
-  ogImageUrl = initOgImage.src; // Local asset
+  ogImageUrl = initOgImage.src;
 }
 
-// Dynamic OG image generation disabled
-
-// Resolve OG image URL (or fallback to SITE.ogImage / default `og.png`)
 const ogImage = ogImageUrl
   ? new URL(ogImageUrl, Astro.url.origin).href
   : undefined;
@@ -64,11 +63,9 @@ const layoutProps = {
   scrollSmooth: true,
 };
 
-/* ========== Prev/Next Posts ========== */
-
-const allPosts = posts.map(({ data: { title }, id, filePath }) => ({
+const allPosts = posts.map(({ data: { title: postTitle }, id, filePath }) => ({
   id,
-  title,
+  title: postTitle,
   filePath,
 }));
 
@@ -77,69 +74,131 @@ const currentPostIndex = allPosts.findIndex(a => a.id === post.id);
 const prevPost = currentPostIndex !== 0 ? allPosts[currentPostIndex - 1] : null;
 const nextPost =
   currentPostIndex !== allPosts.length ? allPosts[currentPostIndex + 1] : null;
+
+const datetime = dayjs(pubDatetime).tz(postTimezone || SITE.timezone);
+const dateLabel = datetime.format("MMMM D, YYYY");
+const wordCount = (post.body ?? "")
+  .trim()
+  .split(/\s+/)
+  .filter(Boolean).length;
+const readingMins = Math.max(1, Math.round(wordCount / 200));
+
+const tagVariants = ["default", "yellow", "green"] as const;
+const primaryTag = tags[0] ? slugifyStr(tags[0]) : "";
 ---
 
 <Layout {...layoutProps}>
   <Header />
-  <BackButton />
-    <main
-      id="main-content"
-      class:list={[
-        "mx-auto w-full max-w-app px-4 pb-12",
-        { "mt-8": !SITE.showBackButton },
-      ]}
-    >
-    <h1
-      transition:name={slugifyStr(title)}
-      class="inline-block text-2xl font-bold text-accent sm:text-3xl"
-    >
-      {title}
-    </h1>
-    <div class="my-2 flex items-center gap-2">
-      <Datetime {pubDatetime} {modDatetime} {timezone} size="lg" />
-      <span
-        aria-hidden="true"
-        class:list={[
-          "max-sm:hidden",
-          { hidden: !SITE.editPost.enabled || hideEditPost },
-        ]}>|</span
+
+  <section class="relative overflow-hidden border-b-2 border-border px-6 py-12 md:py-14">
+    <PixelBottle
+      class="pointer-events-none absolute -right-8 -bottom-10 size-[280px] opacity-[0.06] text-foreground"
+      style="--byte: currentColor"
+    />
+    <div class="relative mx-auto max-w-app">
+      <nav
+        class="mb-4 font-sans text-xs font-extrabold tracking-widest uppercase opacity-60"
+        aria-label="breadcrumb"
       >
-      <EditPost {hideEditPost} {post} class="max-sm:hidden" />
+        <a href="/posts" class="hover:text-accent">Notes</a>
+        {
+          primaryTag && (
+            <>
+              {" "}/{" "}
+              <a href={`/tags/${primaryTag}/`} class="hover:text-accent">
+                {tags[0]}
+              </a>
+            </>
+          )
+        }
+        {" "}/ {title}
+      </nav>
+      <h1
+        transition:name={slugifyStr(title)}
+        class="mb-4 max-w-[24ch] font-serif text-[clamp(30px,4.6vw,50px)] leading-[1.12] font-semibold tracking-tight"
+      >
+        {title}
+      </h1>
+      <p class="mb-5 max-w-[60ch] text-lg text-fg-muted italic">{description}</p>
+      <div class="mb-4 flex flex-wrap items-center gap-2.5">
+        {
+          tags.map((tag, i) => (
+            <Tag
+              tag={slugifyStr(tag)}
+              tagName={tag}
+              variant={tagVariants[i % 3]}
+            />
+          ))
+        }
+        <time
+          class="ms-1.5 font-sans text-[13px] font-bold opacity-65"
+          datetime={datetime.toISOString()}
+        >
+          {dateLabel} · {readingMins} min read
+        </time>
+      </div>
+      <div
+        class="inline-flex items-center gap-3 rounded-full border-2 border-border bg-muted py-2 pe-4 ps-2"
+      >
+        <span
+          class="grid size-9 place-items-center rounded-full border-2 border-border bg-[image:var(--gradient)] text-[#1a1a1a]"
+          style="--byte: #f4f1ea"
+        >
+          <PixelBottle class="size-[22px]" />
+        </span>
+        <span class="font-sans text-[12.5px] leading-tight font-bold">
+          <b class="block text-[13.5px] font-black">{author}</b>
+          {SITE.title} · measured, not marketed
+        </span>
+      </div>
+      {
+        SITE.editPost.enabled && !hideEditPost && (
+          <div class="mt-4">
+            <EditPost {hideEditPost} {post} />
+          </div>
+        )
+      }
     </div>
+  </section>
+
+  <main id="main-content" class="mx-auto w-full max-w-app px-6 pb-16">
     <article
       id="article"
-      class="app-prose mx-auto mt-8 max-w-app prose-pre:bg-(--shiki-light-bg) dark:prose-pre:bg-(--shiki-dark-bg)"
+      class="app-prose mx-auto mt-12 max-w-[760px]"
     >
       <Content />
     </article>
 
-    <hr class="my-8 border-dashed" />
+    <div
+      class="mx-auto mt-10 flex max-w-[760px] flex-wrap gap-2 border-t-2 border-border pt-6"
+    >
+      {tags.map((tag, i) => (
+        <Tag
+          tag={slugifyStr(tag)}
+          tagName={tag}
+          variant={tagVariants[i % 3]}
+        />
+      ))}
+    </div>
 
-    <EditPost class="sm:hidden" {hideEditPost} {post} />
+    <div class="mx-auto mt-8 max-w-[760px]">
+      <ShareLinks />
+      <BackToTopButton />
+    </div>
 
-    <ul class="mt-4 mb-8 sm:my-8">
-      {tags.map(tag => <Tag tag={slugifyStr(tag)} tagName={tag} />)}
-    </ul>
-
-    <BackToTopButton />
-
-    <ShareLinks />
-
-    <hr class="my-6 border-dashed" />
-
-    <!-- Previous/Next Post Buttons -->
-    <div class="grid grid-cols-1 gap-6 sm:grid-cols-2">
+    <div class="mx-auto mt-10 grid max-w-[760px] gap-4 sm:grid-cols-2">
       {
         prevPost && (
           <a
             href={getPath(prevPost.id, prevPost.filePath)}
-            class="flex w-full gap-1 hover:opacity-75"
+            class="lift-card flex flex-col gap-1.5 bg-muted p-5 no-underline"
           >
-            <IconChevronLeft class="inline-block flex-none rtl:rotate-180" />
-            <div>
-              <span>Previous Post</span>
-              <div class="text-sm text-accent/85">{prevPost.title}</div>
-            </div>
+            <span class="font-sans text-[11px] font-black tracking-widest uppercase opacity-60">
+              Previous
+            </span>
+            <span class="font-serif text-[17px] leading-snug font-semibold text-foreground">
+              {prevPost.title}
+            </span>
           </a>
         )
       }
@@ -147,13 +206,14 @@ const nextPost =
         nextPost && (
           <a
             href={getPath(nextPost.id, nextPost.filePath)}
-            class="flex w-full justify-end gap-1 text-end hover:opacity-75 sm:col-start-2"
+            class="lift-card flex flex-col items-end gap-1.5 bg-muted p-5 text-right no-underline sm:col-start-2"
           >
-            <div>
-              <span>Next Post</span>
-              <div class="text-sm text-accent/85">{nextPost.title}</div>
-            </div>
-            <IconChevronRight class="inline-block flex-none rtl:rotate-180" />
+            <span class="font-sans text-[11px] font-black tracking-widest uppercase opacity-60">
+              Next
+            </span>
+            <span class="font-serif text-[17px] leading-snug font-semibold text-foreground">
+              {nextPost.title}
+            </span>
           </a>
         )
       }
@@ -163,29 +223,20 @@ const nextPost =
 </Layout>
 
 <script is:inline data-astro-rerun>
-  /** Create a progress indicator
-   *  at the top */
   function createProgressBar() {
-    // Create the main container div
     const progressContainer = document.createElement("div");
     progressContainer.className =
       "progress-container fixed top-0 z-10 h-1 w-full bg-background";
 
-    // Create the progress bar div
     const progressBar = document.createElement("div");
     progressBar.className = "progress-bar h-1 w-0 bg-accent";
     progressBar.id = "myBar";
 
-    // Append the progress bar to the progress container
     progressContainer.appendChild(progressBar);
-
-    // Append the progress container to the document body or any other desired parent element
     document.body.appendChild(progressContainer);
   }
   createProgressBar();
 
-  /** Update the progress bar
-   *  when user scrolls */
   function updateScrollProgress() {
     document.addEventListener("scroll", () => {
       const winScroll =
@@ -194,18 +245,14 @@ const nextPost =
         document.documentElement.scrollHeight -
         document.documentElement.clientHeight;
       const scrolled = (winScroll / height) * 100;
-      if (document) {
-        const myBar = document.getElementById("myBar");
-        if (myBar) {
-          myBar.style.width = scrolled + "%";
-        }
+      const myBar = document.getElementById("myBar");
+      if (myBar) {
+        myBar.style.width = scrolled + "%";
       }
     });
   }
   updateScrollProgress();
 
-  /** Attaches links to headings in the document,
-   *  allowing sharing of sections easily */
   function addHeadingLinks() {
     const headings = Array.from(
       document.querySelectorAll("h2, h3, h4, h5, h6")
@@ -226,8 +273,6 @@ const nextPost =
   }
   addHeadingLinks();
 
-  /** Attaches copy buttons to code blocks in the document,
-   * allowing users to copy code easily. */
   function attachCopyButtons() {
     const copyButtonLabel = "Copy";
     const codeBlocks = Array.from(document.querySelectorAll("pre"));
@@ -236,23 +281,20 @@ const nextPost =
       const wrapper = document.createElement("div");
       wrapper.style.position = "relative";
 
-      // Check if --file-name-offset custom property exists
       const computedStyle = getComputedStyle(codeBlock);
       const hasFileNameOffset =
         computedStyle.getPropertyValue("--file-name-offset").trim() !== "";
 
-      // Determine the top positioning class
       const topClass = hasFileNameOffset
         ? "top-(--file-name-offset)"
         : "-top-3";
 
       const copyButton = document.createElement("button");
-      copyButton.className = `copy-code absolute end-3 ${topClass} rounded bg-muted border border-muted px-2 py-1 text-xs leading-4 text-foreground font-medium`;
+      copyButton.className = `copy-code absolute end-3 ${topClass} rounded-md border-2 border-border bg-muted px-2 py-1 text-xs leading-4 text-foreground font-sans font-bold`;
       copyButton.innerHTML = copyButtonLabel;
       codeBlock.setAttribute("tabindex", "0");
       codeBlock.appendChild(copyButton);
 
-      // wrap codebock with relative parent element
       codeBlock?.parentNode?.insertBefore(wrapper, codeBlock);
       wrapper.appendChild(codeBlock);
 
@@ -267,7 +309,6 @@ const nextPost =
 
       await navigator.clipboard.writeText(text ?? "");
 
-      // visual feedback that task is completed
       button.innerText = "Copied";
 
       setTimeout(() => {
@@ -277,7 +318,6 @@ const nextPost =
   }
   attachCopyButtons();
 
-  /* Go to page start after page swap */
   document.addEventListener("astro:after-swap", () =>
     window.scrollTo({ left: 0, top: 0, behavior: "instant" })
   );

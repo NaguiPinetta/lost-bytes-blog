@@ -7,13 +7,13 @@ const URL = Astro.url;
 
 {
   SHARE_LINKS.length > 0 && (
-    <div class="flex flex-none flex-col items-center justify-center gap-1 md:items-start">
-      <span class="italic">Share this post on:</span>
-      <div class="text-center">
+    <div class="flex flex-none flex-col items-center justify-center gap-2 md:items-start">
+      <span class="font-sans text-sm font-bold italic">Share this post on:</span>
+      <div class="flex flex-wrap justify-center gap-2 text-center">
         {SHARE_LINKS.map(social => (
           <LinkButton
             href={`${social.href + URL}`}
-            class="scale-90 p-2 hover:rotate-6 sm:p-1"
+            class="rounded-full border-2 border-border bg-muted p-2 transition-all hover:translate-[2px,2px] hover:shadow-[1px_1px_0_var(--shadow-color)]"
             title={social.linkTitle}
           >
             <social.icon class="inline-block size-6 scale-125 fill-transparent stroke-current stroke-2 opacity-90 group-hover:fill-transparent sm:scale-110" />

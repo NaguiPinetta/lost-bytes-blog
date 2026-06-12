@@ -1,36 +1,71 @@
 ---
-import { slugifyStr } from "@/utils/slugify";
+import dayjs from "dayjs";
+import utc from "dayjs/plugin/utc";
+import timezone from "dayjs/plugin/timezone";
 import type { CollectionEntry } from "astro:content";
 import { getPath } from "@/utils/getPath";
-import Datetime from "./Datetime.astro";
+import { slugifyStr } from "@/utils/slugify";
+import Tag from "./Tag.astro";
+import { SITE } from "@/config";
+
+dayjs.extend(utc);
+dayjs.extend(timezone);
 
 export interface Props extends CollectionEntry<"blog"> {
-  variant?: "h2" | "h3";
+  variant?: "default" | "big";
 }
 
-const { variant = "h2", data, id, filePath } = Astro.props;
+const { variant = "default", data, id, filePath, body } = Astro.props;
 
-const { title, description, pubDatetime, modDatetime, timezone } = data;
+const { title, description, pubDatetime, tags, timezone: postTimezone } = data;
 
-const headerProps = {
-  style: { viewTransitionName: slugifyStr(title) },
-  class: "text-lg font-medium decoration-dashed hover:underline",
-};
+const postUrl = getPath(id, filePath);
+
+const datetime = dayjs(pubDatetime).tz(postTimezone || SITE.timezone);
+const dateLabel = datetime.format("D MMM, YYYY");
+
+const wordCount = (body ?? "").trim().split(/\s+/).filter(Boolean).length;
+const readingMins = Math.max(1, Math.round(wordCount / 200));
+
+const tagVariants = ["default", "yellow", "green"] as const;
 ---
 
-<li class="my-6">
-  <a
-    href={getPath(id, filePath)}
-    class="inline-block text-lg font-medium text-accent decoration-dashed underline-offset-4 focus-visible:no-underline focus-visible:underline-offset-0"
-  >
+<article
+  class:list={[
+    "lift-card flex flex-col gap-3 bg-muted p-5",
+    { "md:col-span-2 bg-card-hover": variant === "big" },
+  ]}
+>
+  <div class="flex flex-wrap gap-1.5">
     {
-      variant === "h2" ? (
-        <h2 {...headerProps}>{title}</h2>
-      ) : (
-        <h3 {...headerProps}>{title}</h3>
-      )
+      tags.slice(0, 3).map((tag, i) => (
+        <Tag
+          tag={slugifyStr(tag)}
+          tagName={tag}
+          variant={tagVariants[i % 3]}
+        />
+      ))
     }
-  </a>
-  <Datetime {pubDatetime} {modDatetime} {timezone} />
-  <p>{description}</p>
-</li>
+  </div>
+  <h3
+    class:list={[
+      "font-serif font-semibold leading-tight tracking-tight",
+      variant === "big" ? "text-[28px]" : "text-[21px]",
+    ]}
+  >
+    <a
+      href={postUrl}
+      class="card-title-link text-foreground no-underline hover:bg-yellow hover:bg-size-[100%_40%] hover:bg-position-[0_85%] hover:bg-no-repeat dark:hover:rounded dark:hover:bg-size-[100%_100%] dark:hover:text-[#1a1a1a]"
+      style={{ viewTransitionName: slugifyStr(title) }}
+    >
+      {title}
+    </a>
+  </h3>
+  <p class="flex-1 text-[14.5px] text-fg-muted">{description}</p>
+  <div
+    class="flex items-center justify-between border-t border-dashed border-[var(--line-soft)] pt-3 font-sans text-xs font-bold opacity-60"
+  >
+    <span>{dateLabel} · {readingMins} min</span>
+    <span class="text-base font-black text-green opacity-100">→</span>
+  </div>
+</article>

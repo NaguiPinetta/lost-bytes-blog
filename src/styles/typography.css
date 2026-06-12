@@ -1,9 +1,8 @@
 @plugin '@tailwindcss/typography';
 
 @layer base {
-  /* ===== Override default Tailwind Typography styles ===== */
   .app-prose {
-    @apply prose;
+    @apply prose max-w-none text-[17.5px] leading-[1.75];
 
     h1,
     h2,
@@ -14,7 +13,7 @@
     }
 
     h3 {
-      @apply italic;
+      @apply text-xl font-bold not-italic;
     }
 
     p,
@@ -27,8 +26,35 @@
       @apply text-foreground;
     }
 
+    & > p {
+      @apply mb-5;
+    }
+
+    & > p:first-of-type::first-letter {
+      float: left;
+      margin-right: 12px;
+      padding-top: 4px;
+      font-size: 3.4em;
+      line-height: 0.82;
+      font-weight: 700;
+    }
+
+    h2 {
+      @apply mt-8 mb-3 flex items-center gap-3 font-serif text-[27px] leading-tight font-bold tracking-tight;
+
+      &::before {
+        content: "";
+        width: 22px;
+        height: 13px;
+        flex-shrink: 0;
+        border: var(--bw) solid var(--border);
+        border-radius: 4px;
+        background: var(--gradient);
+      }
+    }
+
     a {
-      @apply break-words text-foreground decoration-dashed underline-offset-4 hover:text-accent focus-visible:no-underline;
+      @apply break-words text-foreground underline decoration-green decoration-2 underline-offset-4 hover:bg-green/15 focus-visible:no-underline;
     }
 
     ul {
@@ -40,11 +66,11 @@
     }
 
     hr {
-      @apply border-border;
+      @apply mx-auto my-10 w-[120px] border-0 border-t-2 border-border;
     }
 
     img {
-      @apply mx-auto border border-border;
+      @apply mx-auto border-2 border-border;
     }
 
     figcaption {
@@ -52,13 +78,18 @@
     }
 
     table {
-      th,
-      td {
-        @apply border border-border p-2;
-      }
+      @apply my-6 w-full overflow-hidden rounded-[var(--radius)] border-2 border-border border-collapse text-[15.5px];
 
       th {
-        @apply py-1.5;
+        @apply border-b-2 border-border bg-muted px-4 py-3 text-left font-sans text-xs font-black tracking-widest uppercase;
+      }
+
+      td {
+        @apply border-b border-dashed border-[var(--line-soft)] px-4 py-3 align-top;
+      }
+
+      tr:last-child td {
+        @apply border-b-0;
       }
 
       code {
@@ -66,16 +97,12 @@
       }
     }
 
-    code {
-      @apply rounded bg-muted/75 p-1 break-words text-foreground before:content-none after:content-none;
-    }
-
-    .astro-code code {
-      @apply flex-[1_0_100%] bg-inherit p-0;
+    :not(pre) > code {
+      @apply rounded-md border border-[var(--line-soft)] bg-muted px-1.5 py-px font-mono text-[0.86em] text-foreground before:content-none after:content-none;
     }
 
     blockquote {
-      @apply border-s-accent/80 break-words opacity-80;
+      @apply my-6 rounded-[var(--radius)] border-2 border-border bg-yellow/20 px-6 py-5 break-words opacity-100 shadow-[var(--shadow-hard-sm)];
     }
 
     details {
@@ -86,27 +113,30 @@
       @apply focus-visible:no-underline focus-visible:outline-2 focus-visible:outline-offset-1 focus-visible:outline-accent focus-visible:outline-dashed;
     }
 
-    pre {
-      @apply focus-visible:border-transparent focus-visible:outline-2 focus-visible:outline-accent focus-visible:outline-dashed;
+    pre,
+    .astro-code {
+      @apply my-8 rounded-[var(--radius)] border-2 border-border bg-[#16140f] px-5 py-4 text-[#ece7df] shadow-[var(--shadow-hard-sm)] focus-visible:border-transparent focus-visible:outline-2 focus-visible:outline-accent focus-visible:outline-dashed;
     }
 
-    /* Right-align signature */
+    .astro-code code,
+    pre code {
+      @apply block overflow-x-auto border-0 bg-transparent p-0 font-mono text-inherit before:content-none after:content-none;
+    }
+
     .signature {
       @apply text-right;
     }
   }
 
-  /* ===== Code Blocks & Syntax Highlighting ===== */
   .astro-code {
-    @apply flex border bg-(--shiki-light-bg) text-(--shiki-light) outline-border [&_span]:text-(--shiki-light);
+    @apply flex text-[#ece7df] [&_span]:text-inherit;
   }
 
-  html[data-theme="dark"] .astro-code {
-    @apply bg-(--shiki-dark-bg) text-(--shiki-dark) [&_span]:text-(--shiki-dark);
+  html[data-theme="dark"] .astro-code,
+  html[data-theme="light"] .astro-code {
+    @apply bg-[#16140f] text-[#ece7df];
   }
 
-  /* Styles for Shiki transformers */
-  /* https://shiki.style/packages/transformers */
   .astro-code {
     .line.diff.add {
       @apply relative inline-block w-full bg-green-400/20 before:absolute before:-left-3 before:text-green-500 before:content-['+'];

@@ -20,10 +20,15 @@ const { page } = Astro.props;
 
 <Layout title={`Notes | ${SITE.title}`}>
   <Header />
-  <Main pageTitle="Notes" pageDesc="All notes in the notebook.">
-    <ul>
+  <Main
+    pageTitle="Notes"
+    pageDesc="All notes in the notebook."
+    linkHref="/tags"
+    linkLabel="Browse tags →"
+  >
+    <div class="grid gap-5 md:grid-cols-2 lg:grid-cols-3">
       {page.data.map(data => <Card {...data} />)}
-    </ul>
+    </div>
   </Main>
 
   <Pagination {page} />
