@@ -2,6 +2,7 @@
 import { getCollection } from "astro:content";
 import Layout from "@/layouts/Layout.astro";
 import Header from "@/components/Header.astro";
+import Ticker from "@/components/Ticker.astro";
 import Footer from "@/components/Footer.astro";
 import LinkButton from "@/components/LinkButton.astro";
 import PixelBottle from "@/components/PixelBottle.astro";
@@ -27,6 +28,7 @@ const latestPosts = sortedPosts.slice(0, SITE.latestNotesCount);
 
 <Layout>
   <Header />
+  <Ticker />
   <main id="main-content" data-layout="index">
     <section id="hero" class="pt-8 pb-6">
       <h1 class="my-4 inline-flex items-center text-4xl font-bold sm:my-8 sm:text-5xl">

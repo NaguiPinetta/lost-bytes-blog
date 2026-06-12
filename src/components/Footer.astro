@@ -1,6 +1,6 @@
 ---
-import Hr from "./Hr.astro";
-import Socials from "./Socials.astro";
+import PixelBottle from "./PixelBottle.astro";
+import { SITE } from "@/config";
 
 const currentYear = new Date().getFullYear();
 
@@ -11,16 +11,40 @@ export interface Props {
 const { noMarginTop = false } = Astro.props;
 ---
 
-<footer class:list={["w-full", { "mt-auto": !noMarginTop }]}>
-  <Hr noPadding />
+<footer
+  class:list={[
+    "w-full border-t-2 border-border bg-[#111] text-[#eae6e1]",
+    { "mt-auto": !noMarginTop },
+  ]}
+>
   <div
-    class="flex flex-col items-center justify-between py-6 sm:flex-row-reverse sm:py-4"
+    class="mx-auto flex max-w-app flex-wrap items-center justify-between gap-6 px-6 py-11"
   >
-    <Socials centered />
-    <div class="my-2 flex flex-col items-center whitespace-nowrap sm:flex-row">
-      <span>Copyright &#169; {currentYear}</span>
-      <span class="hidden sm:inline">&nbsp;|&nbsp;</span>
-      <span>All rights reserved.</span>
-    </div>
+    <a
+      href="/"
+      class="flex items-center gap-2.5 font-sans text-[26px] font-black tracking-tight"
+    >
+      <span
+        class="grid size-[34px] place-items-center rounded-lg border-2 border-[#eae6e1] bg-[image:var(--gradient)] shadow-[3px_3px_0_var(--green)]"
+        style="--byte: #f4f1ea"
+      >
+        <PixelBottle class="size-6 text-[#1a1a1a]" />
+      </span>
+      <span>
+        lost<em
+          class="bg-[image:var(--gradient)] bg-clip-text font-black not-italic text-transparent"
+          >bytes</em
+        >
+      </span>
+    </a>
+    <nav class="flex flex-wrap gap-5 font-sans text-sm font-bold">
+      <a href="/posts" class="hover:text-yellow">Notes</a>
+      <a href="/tags" class="hover:text-yellow">Tags</a>
+      <a href="/about" class="hover:text-yellow">About</a>
+      <a href="/rss.xml" class="hover:text-yellow">RSS</a>
+    </nav>
+    <p class="w-full font-sans text-xs opacity-55">
+      Copyright © {currentYear} {SITE.author}. All rights reserved.
+    </p>
   </div>
 </footer>
