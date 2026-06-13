@@ -8,7 +8,7 @@ tags:
   - ai
   - local-llm
   - notes
-draft: true
+draft: false
 featured: false
 ---
 

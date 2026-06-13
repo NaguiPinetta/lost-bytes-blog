@@ -9,8 +9,8 @@ tags:
   - export-controls
   - infrastructure
   - anthropic
-draft: true
-featured: false
+draft: false
+featured: true
 ---
 
 On June 12, Anthropic abruptly disabled Claude Fable 5 and Mythos 5 for every customer. Not a capacity outage — a government order. Per the company's own statement and the [stickied r/ClaudeAI megathread](https://www.reddit.com/r/ClaudeAI/comments/1u4dij4/) documenting it, the US government issued an export-control directive, citing national-security authorities, suspending all access to both models by *any foreign national* — inside or outside the US, including Anthropic's own non-citizen employees. To comply, Anthropic had to pull both models for everyone. Its other models (Opus 4.8, Sonnet 4.6) were untouched.
