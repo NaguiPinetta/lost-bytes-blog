@@ -22,19 +22,29 @@ cd /Users/nagui/Desktop/git/noise-distiller/api && nohup uv run uvicorn app.main
 
 If it still won't come up, stop and report — do not improvise around it.
 
-## 2. Gather material (last 24-48h)
+## 2. Gather material — YouTube transcripts first (last 24-48h)
 
-Pull three signals, in priority order:
+**Primary focus (current editorial direction): the YouTube channels' audio
+transcriptions.** These are long-form, opinionated, information-dense — the richest
+material in the system. Note many channels are Spanish-language; the blog publishes
+in English, so translate when quoting.
 
-1. **Bookmarks** (the user's own curation — these get first claim on slots):
-   `GET http://localhost:8000/api/v1/events?is_bookmarked=true&limit=30&sort=published`
-2. **Cross-source clusters** (independent sources converging):
-   `GET http://localhost:8000/api/v1/intel/clusters?hours=48&fields=summary`
-   Rank by `source_count` then `trend_score`.
-3. **Fresh notable events** beyond those:
-   `GET http://localhost:8000/api/v1/events?limit=60&sort=published` — skim for
-   single-source items that are still clearly worth a note (major release,
-   striking result, genuinely odd find).
+1. **Sync first** so material is fresh: list YouTube sources
+   (`GET http://localhost:8000/api/v1/sources` → filter `kind == "youtube"`), then
+   `POST /api/v1/sources/{source_id}/sync` for each. Wait ~2 minutes, then proceed —
+   do NOT block on long transcriptions; anything not ready rolls to tomorrow.
+2. **Pull each YouTube source's recent events**:
+   `GET /api/v1/events?source_id={id}&limit=10&sort=published`
+   **Transcript-readiness gate:** only use events where `extraction_status == "ok"`
+   and `content_md` is non-empty (that IS the transcript — the app's "Read" tab).
+   Skip anything untranscribed; never write from a bare title/snippet.
+   For timestamped quoting, `GET /api/v1/events/{event_id}/transcript` gives chunks
+   with start/end seconds.
+3. **Secondary signals**, to round out the batch:
+   - Bookmarks (the user's curation — first claim on remaining slots):
+     `GET /api/v1/events?is_bookmarked=true&limit=30&sort=published`
+   - Cross-source clusters: `GET /api/v1/intel/clusters?hours=48&fields=summary`,
+     ranked by `source_count` then `trend_score`.
 
 ## 3. The editorial bar — select 5-7, never pad
 
@@ -65,7 +75,9 @@ Read `_meta/writing-personas.md` first.
 
 **Short note format** (the default — 300–500 words each):
 - Persona still applies, lightly: commentary/trend → Vera's voice; hands-on/release
-  → Tomás's; oddity → Iris's
+  → Tomás's; oddity → Iris's; security incident/vuln/malware → Dario's
+- A transcript-sourced note names the channel and links the video; quote sparingly
+  and translate Spanish quotes into English (note "translated from Spanish")
 - Shape: a sharp lede (what happened / what it is) → why it matters or what's
   actually new → one honest caveat or open question → source attribution with link
 - Frontmatter per `src/content.config.ts`: `draft: true`, `featured: false`,
